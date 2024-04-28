@@ -201,6 +201,8 @@ public class Main extends JFrame {
         updateComponentSizes();
     }
 
+    // this is a test change
+
     // * Updates the JObjects Dynamically
     private void updateComponentSizes() {
         // Initializing what the text size and title size should be
