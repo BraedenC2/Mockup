@@ -108,10 +108,28 @@ new FormModel {
 							"$rowConstraints": "[][][][][][][][][][][]"
 						} ) {
 							name: "trials_SearchPane"
+							add( new FormComponent( "javax.swing.JComboBox" ) {
+								name: "searchBox"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 2"
+							} )
 							add( new FormComponent( "javax.swing.JTextField" ) {
-								name: "textField1"
+								name: "searchField"
 							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
 								"value": "cell 1 2 6 1"
+							} )
+							add( new FormComponent( "javax.swing.JButton" ) {
+								name: "searchButton"
+								"text": "Search"
+								addEvent( new FormEvent( "java.awt.event.ActionListener", "actionPerformed", "search", true ) )
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 7 2"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "resultNumberLabel"
+								"horizontalAlignment": 0
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 8 2"
 							} )
 							add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
 								name: "scrollPane1"
@@ -130,6 +148,78 @@ new FormModel {
 							"$rowConstraints": "[][][][][][][][][]"
 						} ) {
 							name: "trials_AddPane"
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel1"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 0"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel10"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 4 0"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel2"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 1"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel11"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 4 1"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel3"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 2"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel12"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 4 2"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel4"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 3"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel5"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 4"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel6"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 5"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel7"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 6"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel8"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 7"
+							} )
+							add( new FormComponent( "javax.swing.JLabel" ) {
+								name: "addLabel9"
+								"text": "text"
+							}, new FormLayoutConstraints( class net.miginfocom.layout.CC ) {
+								"value": "cell 0 8"
+							} )
 						}, new FormLayoutConstraints( null ) {
 							"title": "Add"
 						} )

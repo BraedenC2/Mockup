@@ -14,6 +14,8 @@ import java.sql.*;
 public class Main extends JFrame {
 
 
+    // TODO: Make the JComboBox an object (<>)
+
     // * Connection
     // ! Don't change
     static final String databasePrefix = "cs366-2241_connorsbc22";
@@ -21,6 +23,7 @@ public class Main extends JFrame {
     static final String hostName = "washington.uww.edu";
     static final String databaseURL = "jdbc:mariadb://" + hostName + "/" + databasePrefix;
     static final String password = "bc2800";
+    String tableName = "";
 
     // * Loads from SQL and shows it on JTable
     private void loadData() {
@@ -130,7 +133,74 @@ public class Main extends JFrame {
         }
     }
 
+    // Searching functionality
 
+    // * Searching Method
+    private void search(ActionEvent e) {
+        searchData( tableName, (String) searchBox.getSelectedItem(), searchField.getText());
+    }
+
+    // * Searches the Trial table and shows it on JTable
+    private void searchData(String tableName, String columnName, String value) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+            System.out.println("databaseURL: " + databaseURL);
+            connection = DriverManager.getConnection(databaseURL, netID, password);
+            System.out.println("Successfully connected to the database");
+
+            if (columnName.isEmpty()){
+                loadTableData(tableName);
+            }
+            String query = "SELECT * FROM " + tableName + " WHERE " + columnName + " = ?;";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setString(1, value);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            ResultSetMetaData metaData = resultSet.getMetaData();
+
+            // * names of columns
+            int columnCount = metaData.getColumnCount();
+            String[] columnNames = new String[columnCount];
+            for (int column = 1; column <= columnCount; column++) {
+                columnNames[column - 1] = metaData.getColumnName(column);
+            }
+
+            // * data of the table
+            Object[][] data = new Object[11000][columnCount];
+            int row = 0;
+            while (resultSet.next() && row < 11000) {
+                for (int columnIndex = 1; columnIndex <= columnCount; columnIndex++) {
+                    data[row][columnIndex - 1] = resultSet.getObject(columnIndex);
+                }
+                row++;
+            }
+
+            // * Updates the table
+            table1.setModel(new DefaultTableModel(data, columnNames));
+
+            // * Display the number of rows (results)
+            resultNumberLabel.setText("Number of results: " + row);
+
+            // ! Error handling. Don't change.
+            resultSet.close();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (preparedStatement != null) preparedStatement.close();
+            } catch (SQLException se2) {
+                se2.printStackTrace();
+            }
+            try {
+                if (connection != null) connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+    }
 
     // The Viewing Functions
 
@@ -174,25 +244,80 @@ public class Main extends JFrame {
                 break;
             case 1: specificLabel.setText("Trials Database");
                 loadTableData("Trial");
+                for (int i = searchBox.getItemCount() - 1; i >= 0; i--) {
+                    searchBox.removeItemAt(i);
+                }
+                tableName = "Trial";
+                searchBox.addItem("id");
+                addLabel1.setText("id");
+                searchBox.addItem("istrial");
+                addLabel2.setText("istrial");
+                searchBox.addItem("returndate");
+                addLabel3.setText("returndate");
+                searchBox.addItem("returnedreason");
+                addLabel4.setText("returnedreason");
+                searchBox.addItem("");
+                // TODO: Do all the other addLabels and make them blank
                 break;
             case 2: specificLabel.setText("Movements Database");
                 loadTableData("Movement");
+                for (int i = searchBox.getItemCount() - 1; i >= 0; i--) {
+                    searchBox.removeItemAt(i);
+                }
+                tableName = "Movement";
+                searchBox.addItem("id");
+                searchBox.addItem("location");
+                searchBox.addItem("movementdate");
+                searchBox.addItem("movementtype");
+                searchBox.addItem("");
                 break;
             case 3: specificLabel.setText("Pets Database");
                 loadTableData("Pet");
+                for (int i = searchBox.getItemCount() - 1; i >= 0; i--) {
+                    searchBox.removeItemAt(i);
+                }
+                tableName = "Pet";
+                searchBox.addItem("sexname");
+                searchBox.addItem("speciesname");
+                searchBox.addItem("breedname");
+                searchBox.addItem("id");
+                searchBox.addItem("intakedate");
+                searchBox.addItem("basecolour");
+                searchBox.addItem("intakereason");
+                searchBox.addItem("istransfer");
+                searchBox.addItem("identichipnumber");
+                searchBox.addItem("animalname");
+                searchBox.addItem("animalage");
+                searchBox.addItem("");
                 break;
             case 4: specificLabel.setText("Deceased Animals Database");
                 loadTableData("DeceasedAnimals");
+                for (int i = searchBox.getItemCount() - 1; i >= 0; i--) {
+                    searchBox.removeItemAt(i);
+                }
+                tableName = "DeceasedAnimals";
+                searchBox.addItem("id");
+                searchBox.addItem("deceaseddate");
+                searchBox.addItem("deceasedreason");
+                searchBox.addItem("diedoffshelter");
+                searchBox.addItem("puttosleep");
+                searchBox.addItem("isdoa");
+                searchBox.addItem("");
                 break;
             case 5: specificLabel.setText("Shelters Database");
                 loadTableData("Shelter");
+                for (int i = searchBox.getItemCount() - 1; i >= 0; i--) {
+                    searchBox.removeItemAt(i);
+                }
+                tableName = "Shelter";
+                searchBox.addItem("id");
+                searchBox.addItem("sheltercode");
+                searchBox.addItem("");
                 break;
-            // TODO: Add more pages
             default:
                 System.out.println("error");
         }
     }
-
 
     // The Dynamic Functions
 
@@ -200,8 +325,6 @@ public class Main extends JFrame {
     private void homePagePanelComponentResized(ComponentEvent e) {
         updateComponentSizes();
     }
-
-    // this is a test change
 
     // * Updates the JObjects Dynamically
     private void updateComponentSizes() {
@@ -256,8 +379,6 @@ public class Main extends JFrame {
         loadData();
     }
 
-    // Test edit
-
     // * The Components
     // ! Do not manipulate anything past this point
     private void initComponents() {
@@ -277,10 +398,25 @@ public class Main extends JFrame {
         specificLabel = new JLabel();
         trials_Pane = new JTabbedPane();
         trials_SearchPane = new JPanel();
-        textField1 = new JTextField();
+        searchBox = new JComboBox();
+        searchField = new JTextField();
+        searchButton = new JButton();
+        resultNumberLabel = new JLabel();
         scrollPane1 = new JScrollPane();
         table1 = new JTable();
         trials_AddPane = new JPanel();
+        addLabel1 = new JLabel();
+        addLabel10 = new JLabel();
+        addLabel2 = new JLabel();
+        addLabel11 = new JLabel();
+        addLabel3 = new JLabel();
+        addLabel12 = new JLabel();
+        addLabel4 = new JLabel();
+        addLabel5 = new JLabel();
+        addLabel6 = new JLabel();
+        addLabel7 = new JLabel();
+        addLabel8 = new JLabel();
+        addLabel9 = new JLabel();
         trials_RemovePane = new JPanel();
         homeButton_TP = new JButton();
 
@@ -439,7 +575,17 @@ public class Main extends JFrame {
                             "[]" +
                             "[]" +
                             "[]"));
-                        trials_SearchPane.add(textField1, "cell 1 2 6 1");
+                        trials_SearchPane.add(searchBox, "cell 0 2");
+                        trials_SearchPane.add(searchField, "cell 1 2 6 1");
+
+                        //---- searchButton ----
+                        searchButton.setText("Search");
+                        searchButton.addActionListener(e -> search(e));
+                        trials_SearchPane.add(searchButton, "cell 7 2");
+
+                        //---- resultNumberLabel ----
+                        resultNumberLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                        trials_SearchPane.add(resultNumberLabel, "cell 8 2");
 
                         //======== scrollPane1 ========
                         {
@@ -473,6 +619,54 @@ public class Main extends JFrame {
                             "[]" +
                             "[]" +
                             "[]"));
+
+                        //---- addLabel1 ----
+                        addLabel1.setText("text");
+                        trials_AddPane.add(addLabel1, "cell 0 0");
+
+                        //---- addLabel10 ----
+                        addLabel10.setText("text");
+                        trials_AddPane.add(addLabel10, "cell 4 0");
+
+                        //---- addLabel2 ----
+                        addLabel2.setText("text");
+                        trials_AddPane.add(addLabel2, "cell 0 1");
+
+                        //---- addLabel11 ----
+                        addLabel11.setText("text");
+                        trials_AddPane.add(addLabel11, "cell 4 1");
+
+                        //---- addLabel3 ----
+                        addLabel3.setText("text");
+                        trials_AddPane.add(addLabel3, "cell 0 2");
+
+                        //---- addLabel12 ----
+                        addLabel12.setText("text");
+                        trials_AddPane.add(addLabel12, "cell 4 2");
+
+                        //---- addLabel4 ----
+                        addLabel4.setText("text");
+                        trials_AddPane.add(addLabel4, "cell 0 3");
+
+                        //---- addLabel5 ----
+                        addLabel5.setText("text");
+                        trials_AddPane.add(addLabel5, "cell 0 4");
+
+                        //---- addLabel6 ----
+                        addLabel6.setText("text");
+                        trials_AddPane.add(addLabel6, "cell 0 5");
+
+                        //---- addLabel7 ----
+                        addLabel7.setText("text");
+                        trials_AddPane.add(addLabel7, "cell 0 6");
+
+                        //---- addLabel8 ----
+                        addLabel8.setText("text");
+                        trials_AddPane.add(addLabel8, "cell 0 7");
+
+                        //---- addLabel9 ----
+                        addLabel9.setText("text");
+                        trials_AddPane.add(addLabel9, "cell 0 8");
                     }
                     trials_Pane.addTab("Add", trials_AddPane);
 
@@ -538,10 +732,25 @@ public class Main extends JFrame {
     private JLabel specificLabel;
     private JTabbedPane trials_Pane;
     private JPanel trials_SearchPane;
-    private JTextField textField1;
+    private JComboBox searchBox;
+    private JTextField searchField;
+    private JButton searchButton;
+    private JLabel resultNumberLabel;
     private JScrollPane scrollPane1;
     private JTable table1;
     private JPanel trials_AddPane;
+    private JLabel addLabel1;
+    private JLabel addLabel10;
+    private JLabel addLabel2;
+    private JLabel addLabel11;
+    private JLabel addLabel3;
+    private JLabel addLabel12;
+    private JLabel addLabel4;
+    private JLabel addLabel5;
+    private JLabel addLabel6;
+    private JLabel addLabel7;
+    private JLabel addLabel8;
+    private JLabel addLabel9;
     private JPanel trials_RemovePane;
     private JButton homeButton_TP;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
