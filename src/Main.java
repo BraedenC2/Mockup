@@ -208,36 +208,90 @@ public class Main extends JFrame {
 
     // * Creates user's data
     private void add(ActionEvent e) {
-        String[] columnNames = new String[11];
-        String[] values = new String[11];
+        String[] columnNames;
+        String[] values;
 
-        columnNames[0] = addLabel1.getText();
-        columnNames[1] = addLabel2.getText();
-        columnNames[2] = addLabel3.getText();
-        columnNames[3] = addLabel4.getText();
-        columnNames[4] = addLabel5.getText();
-        columnNames[5] = addLabel6.getText();
-        columnNames[6] = addLabel7.getText();
-        columnNames[7] = addLabel8.getText();
-        columnNames[8] = addLabel9.getText();
-        columnNames[9] = addLabel10.getText();
-        columnNames[10] = addLabel11.getText();
+        if (specificLabel.getText().equals("Trials Database") || specificLabel.getText().equals("Movements Database")){
+            columnNames = new String[4];
+            values = new String[4];
 
-        values[0] = addField1.getText();
-        values[1] = addField2.getText();
-        values[2] = addField3.getText();
-        values[3] = addField4.getText();
-        values[4] = addField5.getText();
-        values[5] = addField6.getText();
-        values[6] = addField7.getText();
-        values[7] = addField8.getText();
-        values[8] = addField9.getText();
-        values[9] = addField10.getText();
-        values[10] = addField11.getText();
+            columnNames[0] = addLabel1.getText();
+            columnNames[1] = addLabel2.getText();
+            columnNames[2] = addLabel3.getText();
+            columnNames[3] = addLabel4.getText();
 
-        addData(tableName, columnNames, values);
+            values[0] = addField1.getText();
+            values[1] = addField2.getText();
+            values[2] = addField3.getText();
+            values[3] = addField4.getText();
+
+            addData(tableName, columnNames, values);
+        } else if (specificLabel.getText().equals("Pets Database")) {
+            columnNames = new String[11];
+            values = new String[11];
+
+            columnNames[0] = addLabel1.getText();
+            columnNames[1] = addLabel2.getText();
+            columnNames[2] = addLabel3.getText();
+            columnNames[3] = addLabel4.getText();
+            columnNames[4] = addLabel5.getText();
+            columnNames[5] = addLabel6.getText();
+            columnNames[6] = addLabel7.getText();
+            columnNames[7] = addLabel8.getText();
+            columnNames[8] = addLabel9.getText();
+            columnNames[9] = addLabel10.getText();
+            columnNames[10] = addLabel11.getText();
+
+            values[0] = addField1.getText();
+            values[1] = addField2.getText();
+            values[2] = addField3.getText();
+            values[3] = addField4.getText();
+            values[4] = addField5.getText();
+            values[5] = addField6.getText();
+            values[6] = addField7.getText();
+            values[7] = addField8.getText();
+            values[8] = addField9.getText();
+            values[9] = addField10.getText();
+            values[10] = addField11.getText();
+
+            addData(tableName, columnNames, values);
+        } else if (specificLabel.getText().equals("Deceased Animals Database")) {
+            columnNames = new String[6];
+            values = new String[6];
+
+            columnNames[0] = addLabel1.getText();
+            columnNames[1] = addLabel2.getText();
+            columnNames[2] = addLabel3.getText();
+            columnNames[3] = addLabel4.getText();
+            columnNames[4] = addLabel5.getText();
+            columnNames[5] = addLabel6.getText();
+
+            values[0] = addField1.getText();
+            values[1] = addField2.getText();
+            values[2] = addField3.getText();
+            values[3] = addField4.getText();
+            values[4] = addField5.getText();
+            values[5] = addField6.getText();
+
+            addData(tableName, columnNames, values);
+
+        }else if (specificLabel.getText().equals("Shelters Database")) {
+            columnNames = new String[2];
+            values = new String[2];
+
+            columnNames[0] = addLabel1.getText();
+            columnNames[1] = addLabel2.getText();
+
+            values[0] = addField1.getText();
+            values[1] = addField2.getText();
+
+            addData(tableName, columnNames, values);
+        } else {
+            System.out.println("Error at add Button Event");
+        }
     }
 
+    // * Add data to the table
     private void addData(String tableName, String[] columnNames, String[] values) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
@@ -284,6 +338,7 @@ public class Main extends JFrame {
             }
         }
     }
+
     // The Viewing Functions
 
     // * Switches to the HomePage
@@ -348,9 +403,9 @@ public class Main extends JFrame {
             case 4:
                 specificLabel.setText("Deceased Animals Database");
                 changeComboLabels = new String[] {"id", "deceaseddate", "deceasedreason", "diedoffshelter", "puttosleep", "isdoa", ""};
-                AddLabels = new String[]{"id", "deceaseddate", "diedoffshelter", "puttosleep", "isdoa", "", "", "", "", "", "", ""};
+                AddLabels = new String[]{"id", "deceaseddate", "deceasedreason", "diedoffshelter", "puttosleep", "isdoa", "", "", "", "", "", ""};
                 setSearchBox(changeComboLabels, "DeceasedAnimals");
-                setAddLabels(AddLabels, 5);
+                setAddLabels(AddLabels, 6);
                 break;
             case 5:
                 specificLabel.setText("Shelters Database");
