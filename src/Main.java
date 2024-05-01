@@ -339,6 +339,44 @@ public class Main extends JFrame {
         }
     }
 
+    // Removing functionality
+
+    // * Prepares the removing action
+    private void remove(ActionEvent e) {
+        int id = Integer.parseInt(removeIDField.getText());
+        removeData(tableName, id);
+    }
+
+    // * Removes the ID and its associates, and updates the table
+    private void removeData(String tableName, int id) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            Class.forName("org.mariadb.jdbc.Driver");
+            connection = DriverManager.getConnection(databaseURL, netID, password);
+            String query = "DELETE FROM " + tableName + " WHERE id =?";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+
+            System.out.println("Removed successfully");
+
+            //! Error handling. Don't change.
+            preparedStatement.close();
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (connection!= null) connection.close();
+            } catch (SQLException se) {
+                se.printStackTrace();
+            }
+        }
+        loadTableData(tableName); // reload the table data after removal
+    }
+
     // The Viewing Functions
 
     // * Switches to the HomePage
@@ -551,7 +589,7 @@ public class Main extends JFrame {
         specificLabel = new JLabel();
         trials_Pane = new JTabbedPane();
         trials_SearchPane = new JPanel();
-        searchBox = new JComboBox();
+        searchBox = new JComboBox<>();
         searchField = new JTextField();
         searchButton = new JButton();
         resultNumberLabel = new JLabel();
@@ -584,6 +622,9 @@ public class Main extends JFrame {
         addField9 = new JTextField();
         addButton = new JButton();
         trials_RemovePane = new JPanel();
+        removeLabel = new JLabel();
+        removeIDField = new JTextField();
+        removeButton = new JButton();
         homeButton_TP = new JButton();
 
         //======== this ========
@@ -877,6 +918,21 @@ public class Main extends JFrame {
                             "[]" +
                             "[]" +
                             "[]"));
+
+                        //---- removeLabel ----
+                        removeLabel.setText("Remove ROW by entering the id in the textbox below");
+                        removeLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                        removeLabel.setFont(removeLabel.getFont().deriveFont(removeLabel.getFont().getStyle() | Font.BOLD, removeLabel.getFont().getSize() + 6f));
+                        trials_RemovePane.add(removeLabel, "cell 4 0 1 2");
+
+                        //---- removeIDField ----
+                        removeIDField.setHorizontalAlignment(SwingConstants.CENTER);
+                        trials_RemovePane.add(removeIDField, "cell 1 5 6 1");
+
+                        //---- removeButton ----
+                        removeButton.setText("Remove");
+                        removeButton.addActionListener(e -> remove(e));
+                        trials_RemovePane.add(removeButton, "cell 2 7 4 1");
                     }
                     trials_Pane.addTab("Remove", trials_RemovePane);
                 }
@@ -915,7 +971,7 @@ public class Main extends JFrame {
     private JLabel specificLabel;
     private JTabbedPane trials_Pane;
     private JPanel trials_SearchPane;
-    private JComboBox searchBox;
+    private JComboBox<String> searchBox;
     private JTextField searchField;
     private JButton searchButton;
     private JLabel resultNumberLabel;
@@ -948,6 +1004,9 @@ public class Main extends JFrame {
     private JTextField addField9;
     private JButton addButton;
     private JPanel trials_RemovePane;
+    private JLabel removeLabel;
+    private JTextField removeIDField;
+    private JButton removeButton;
     private JButton homeButton_TP;
     // JFormDesigner - End of variables declaration  //GEN-END:variables  @formatter:on
 }
